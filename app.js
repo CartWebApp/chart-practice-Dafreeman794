@@ -135,20 +135,41 @@ function scatterUnitsVsPrice(title) {
 
 // DOUGHNUT — member vs casual share for one title + year
 function doughnutUnitsByRegion(year, title) {
-  const row = chartData.find(r => r.year === year && r.title === title);
+
+  console.log("Selected:", year, title);
+
+  const row = chartData.filter(r => r.year === year && r.title === title);
   
-  const units = row.unitsM;
-  const region = row.region;
+  console.log("Matching rows:", row);
+
+
+  if(!row) {
+    alert("No data found for this title/year")
+    return;
+  }
+
+  const regiontote = {};
+
+   row.forEach(r => {
+    if (!regiontote[r.region]) {
+      regiontote[r.region] = 0;
+    }
+    regiontote[r.region] += r.unitsM;
+  });
+
+  const units = object.keys(regiontote);
+  const region = object.values(regiontote);
+
 
   return {
     type: "doughnut",
     data: {
-      labels: ["Units (%)", "region"],
-      datasets: [{ label: "Rider mix", data: [units, region] }]
+      labels,
+      datasets: [{ label: "Units (millions)", data: values }]
     },
     options: {
       plugins: {
-        title: { display: true, text: `Rider mix: ${title} (${year})` }
+        title: { display: true, text: `Units by Region: ${title} (${year})` }
       }
     }
   };
