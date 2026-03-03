@@ -133,43 +133,43 @@ function scatterUnitsVsPrice(title) {
   };
 }
 
-// DOUGHNUT — member vs casual share for one title + year
+//funtion comparing units by a different regional plane.
 function doughnutUnitsByRegion(year, title) {
 
-  console.log("Selected:", year, title);
+  const rows = chartData.filter(r => r.year === year && r.title === title);
 
-  const row = chartData.filter(r => r.year === year && r.title === title);
-  
-  console.log("Matching rows:", row);
-
-
-  if(!row) {
-    alert("No data found for this title/year")
+  if (rows.length === 0) {
+    alert("No data found for this title/year");
     return;
   }
 
-  const regiontote = {};
+  const regionTotals = {};
 
-   row.forEach(r => {
-    if (!regiontote[r.region]) {
-      regiontote[r.region] = 0;
+  rows.forEach(r => {
+    if (!regionTotals[r.region]) {
+      regionTotals[r.region] = 0;
     }
-    regiontote[r.region] += r.unitsM;
+    regionTotals[r.region] += r.unitsM;
   });
 
-  const units = object.keys(regiontote);
-  const region = object.values(regiontote);
-
+  const labels = Object.keys(regionTotals);     // regions
+  const values = Object.values(regionTotals);   // total units
 
   return {
     type: "doughnut",
     data: {
-      labels,
-      datasets: [{ label: "Units (millions)", data: values }]
+      labels: labels,
+      datasets: [{
+        label: "Units (millions)",
+        data: values
+      }]
     },
     options: {
       plugins: {
-        title: { display: true, text: `Units by Region: ${title} (${year})` }
+        title: {
+          display: true,
+          text: `Units by Region: ${title} (${year})`
+        }
       }
     }
   };
